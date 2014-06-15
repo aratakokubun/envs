@@ -1,0 +1,12 @@
+[user]
+	name = aratakokubun
+	email = usingHTC@gmail.com
+[color]
+	ui = auto
+[alias]
+	co = checkout
+	ci = commit -m
+	st = status
+	ad = add .
+[core]
+	editor = vim -c \"set fenc=utf-8\"
