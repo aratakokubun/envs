@@ -12,7 +12,8 @@ if has('vim_starting')
 		execute 'set runtimepath+=' . expand('~/.vim/bundle/neobundle.vim/')
 endif
 
-call neobundle#rc(expand('~/.vim/bundle/'))
+" neobundle rc is deprecated
+" call neobundle#rc(expand('~/.vim/bundle/'))
 
 " Installation check.
 if neobundle#exists_not_installed_bundles()
@@ -21,23 +22,25 @@ if neobundle#exists_not_installed_bundles()
 		echomsg 'Please execute ":NeoBundleInstall" command.'
 endif
 
+call neobundle#begin(expand('~/.vim/bundle/'))
+NeoBundleFetch 'Shougo/neobundle.vim'
 " 以下のプラグインをバンドル
-NeoBundle 'git://github.com/kien/ctrlp.vim.git'
-NeoBundle 'git://github.com/Shougo/neobundle.vim.git'
-NeoBundle 'git://github.com/scrooloose/nerdtree.git'
-NeoBundle 'git://github.com/scrooloose/syntastic.git'
+NeoBundle 'https://github.com/kien/ctrlp.vim.git'
+NeoBundle 'https://github.com/Shougo/neobundle.vim.git'
+NeoBundle 'https://github.com/scrooloose/nerdtree.git'
+NeoBundle 'https://github.com/scrooloose/syntastic.git'
 " 補完機能
-" NeoBundle 'git://github.com/Shougo/neocomplcache.git'
+" NeoBundle 'https://github.com/Shougo/neocomplcache.git'
 "ファイラとして利用
-NeoBundle 'git://github.com/Shougo/unite.vim.git'
+NeoBundle 'https://github.com/Shougo/unite.vim.git'
 " vim fugitive
-NeoBundle 'git://github.com/tpope/vim-fugitive'
+NeoBundle 'https://github.com/tpope/vim-fugitive'
 " java script 開発環境
 NeoBundle 'marijnh/tern_for_vim'
 " Vim filer
 NeoBundle 'Shougo/vimfiler'
 " Vim Proc
-NeoBundle 'Shougo/vimproc'
+" NeoBundle 'Shougo/vimproc'
 " Vim shell
 NeoBundle 'Shougo/vimshell'
 " Hybrid Text
@@ -49,8 +52,10 @@ NeoBundle 'osyo-manga/quickrun-hook-santi_pinch'
 " 検索結果を見やすくする
 NeoBundle 'osyo-manga/vim-anzu'
 " スニペット補完
-NeoBundle 'Shougo/neosnippet'
-NeoBundle 'Shougo/neosnippet-snippets'
+" NeoBundle 'Shougo/neosnippet'
+" NeoBundle 'Shougo/neosnippet-snippets'
+
+call neobundle#end()
 
 " ファイルタイプ関連を有効化
 filetype on
@@ -70,8 +75,10 @@ set showmatch 	" 括弧入力時の対応する括弧を表示
 set matchtime=3 " ハイライト表示を3秒に設定
 set infercase 	" 補完時に大文字小文字を区別しない
 syntax on 		" コードの色分け
-set tabstop=4 	" インデントをスペース4つ分に設定
+set tabstop=2 	" インデントをスペース2つ分に設定
+set autoindent
 set smartindent " 自動インデント
+set shiftwidth=2
 set backspace=indent,eol,start " バックスペースでなんでも消せるようにする
 " クリップボードをデフォルトのレジスタとして指定
 if has('unnamedplus')
@@ -95,10 +102,6 @@ highlight Normal ctermbg=none
 set list " 不可視文字を可視化
 set wrap " 長いテキストの折り返し
 
-" snippet関連の設定
-imap <expr><TAB> pumvisible() ? "\<C-n>" : neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-smap <expr><TAB> neosnippet#jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-
 " quickrunの設定
 let g:quickrun_config ={}
 let g:quickrun_config.R = {'command' : 'R -f %<cr>'}
@@ -114,6 +117,7 @@ let g:quickrun_config = {
 \	}
 \}
 
+let mapleader = "\<Space>"
 " 検索関連
 set hlsearch  	" 検索結果をハイライト表示
 set ignorecase 	" 大文字今次を区別しない
@@ -131,11 +135,11 @@ nnoremap # #zz
 nnoremap g* g*zz
 nnoremap g# g#zz
 
-" Ctrl + hjkl でウィンドウ間を移動
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
+" Leader + hjkl でウィンドウ間を移動
+nnoremap <Leader>h <C-w>h
+nnoremap <Leader>j <C-w>j
+nnoremap <Leader>k <C-w>k
+nnoremap <Leader>l <C-w>l
 
 " Shift + 矢印でウィンドウサイズを変更
 nnoremap <S-Left>  <C-w><<CR>
@@ -163,19 +167,36 @@ vnoremap " "zdi"z"<LEFT>
 vnoremap ' "zdi'z''"<LEFT>
 
 " 文頭文末への移動
-inoremap <C-a> <HOME>
-vnoremap <C-a> <HOME>
-nnoremap <C-a> <HOME>
-inoremap <C-e> <END>
-vnoremap <C-e> <END>
-nnoremap <C-e> <END>
+"inoremap <C-a> <HOME>
+"vnoremap <C-a> <HOME>
+"nnoremap <C-a> <HOME>
+"inoremap <C-e> <END>
+"vnoremap <C-e> <END>
+"nnoremap <C-e> <END>
+inoremap <Leader><Leader>a <HOME>
+vnoremap <Leader>a <HOME>
+nnoremap <Leader>a <HOME>
+inoremap <Leader><Leader>e <HOME>
+vnoremap <Leader>e <END>
+nnoremap <Leader>e <END>
+
+" Back to normal mode.
+inoremap jj <Esc>
+" Save
+nnoremap <Leader>w :w<CR>
+inoremap <Leader><Leader>w :w<CR>
+nnoremap <Leader>q :wq<CR>
+inoremap <Leader><Leader>q :wq<CR>
+" Return
+nnoremap <Leader><CR> o<ESC>
+nnoremap <C-CR> i<CR><ESC>
 
 " Endを打った時に改行
 " inoremap end end<RETURN>
 
 " snippetの展開
-imap <C-k> <Plug>(neosnippet_expand_or_jump)
-smap <C-k> <Plug>(neosnippet_expand_or_jump)
+" imap <C-k> <Plug>(neosnippet_expand_or_jump)
+" smap <C-k> <Plug>(neosnippet_expand_or_jump)
 
 " vimfiler起動時に自動的に分割状態にする
 " autocmd VimEnter * VimFiler -split -simple -winwidth=25 -no-quit 
@@ -202,3 +223,6 @@ autocmd FileType python let g:pydiction_location = '~/.vim/pydiction/complete-di
 
 " jsのsyntastic highlight
 " let g:syntastic_javascript_checker = "jshint"
+
+" 検索時に常に\vがついた状態で正規表現検索が出来る
+nmap / /\v
